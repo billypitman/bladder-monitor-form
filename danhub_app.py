@@ -91,8 +91,8 @@ def output():
 @app.route("/log")
 def log():
     # Retrieve the most recent 10 records from the database tables
-    intake_data = session.query(Intake).filter(Intake.active == True).all()
-    output_data = session.query(Output).filter(Output.active == True).all()
+    intake_data = session.query(Intake).filter(Intake.active == True).order_by(Intake.created_time.desc()).limit(10)
+    output_data = session.query(Output).filter(Output.active == True).order_by(Output.created_time.desc()).limit(10)
 
     return render_template("log.html", intake_data=intake_data, output_data=output_data)    
 
