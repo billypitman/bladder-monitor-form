@@ -20,6 +20,7 @@
         <th>Intake (mL)</th>
         <th>Intake Time</th>
         <th>Entry Creation</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -29,6 +30,12 @@
         <td>{{ intake.intake_ml }}</td>
         <td>{{ intake.measurement_time }}</td>
         <td>{{ intake.created_time }}</td>
+        <td>
+            <form action="{{ url_for('delete_intake', intake_id=intake.id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this intake?');">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+            </form>
+          </td>
       </tr>
       {% endfor %}
     </tbody>
@@ -46,6 +53,7 @@
         <th>Output (mL)</th>
         <th>Output Time</th>
         <th>Entry Creation</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -55,6 +63,12 @@
         <td>{{ output.output_ml }}</td>
         <td>{{ output.measurement_time }}</td>
         <td>{{ output.created_time }}</td>
+        <td>
+            <form action="{{ url_for('delete_output', output_id=output.id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this output?');">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+            </form>
+          </td>
       </tr>
       {% endfor %}
     </tbody>

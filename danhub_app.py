@@ -91,10 +91,38 @@ def output():
 @app.route("/log")
 def log():
     # Retrieve the most recent 10 records from the database tables
-    intake_data = session.query(Intake).all()
-    output_data = session.query(Output).all()
+    intake_data = session.query(Intake).filter(Intake.active == True).all()
+    output_data = session.query(Output).filter(Output.active == True).all()
 
     return render_template("log.html", intake_data=intake_data, output_data=output_data)    
+
+@app.route("/delete_intake/<int:intake_id>", methods = ["POST"])
+def delete_intake(intake_id):
+    intake = session.query(Intake).filter_by(id=intake_id).first()
+    # Check if the intake record exists
+    if intake:
+        # Update the active field to False
+        intake.active = False
+        session.commit()
+        flash("Intake deleted successfully", "delete_success")
+    else:
+        flash("Intake record not found", "delete_error")
+
+    return redirect(url_for("log"))
+
+@app.route("/delete_output/<int:output_id>", methods = ["POST"])
+def delete_output(output_id):
+    output = session.query(Output).filter_by(id=output_id).first()
+    # Check if the intake record exists
+    if output:
+        # Update the active field to False
+        output.active = False
+        session.commit()
+        flash("Output deleted successfully", "delete_success")
+    else:
+        flash("Output record not found", "delete_error")
+
+    return redirect(url_for("log"))
 
 @app.route("/analytics")
 def analytics():
