@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Log{% endblock %}
+{% block content %}
+<h3>Log</h3>
+{% with success_messages = get_flashed_messages() %}
+{% if success_messages %}
+  <div class="alert alert-success">
+    {% for message in success_messages %}
+      {{ message }}
+    {% endfor %}
+  </div>
+{% endif %}
+{% endwith %}
+<div class="table-responsive">
+  <h4>Recent Intake Data</h4>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Intake (mL)</th>
+        <th>Intake Time</th>
+        <th>Entry Creation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for intake in intake_data %}
+      <tr>
+        <td>{{ intake.user_id }}</td>
+        <td>{{ intake.intake_ml }}</td>
+        <td>{{ intake.measurement_time }}</td>
+        <td>{{ intake.created_time }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="container-fluid">
+    <p><a href="{{ url_for('intake') }}" class="btn btn-primary">Log New Intake</a></p>
+</div>  
+<div class="table-responsive">
+  <h4>Recent Output Data</h4>   
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Output (mL)</th>
+        <th>Output Time</th>
+        <th>Entry Creation</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for output in output_data %}
+      <tr>
+        <td>{{ output.user_id }}</td>
+        <td>{{ output.output_ml }}</td>
+        <td>{{ output.measurement_time }}</td>
+        <td>{{ output.created_time }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="container-fluid">
+    <p><a href="{{ url_for('output') }}" class="btn btn-primary">Log New Output</a></p>
+</div> 
+{% endblock %}
