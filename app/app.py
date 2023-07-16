@@ -1,10 +1,16 @@
+import os
 from datetime import datetime
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, desc
 from sqlalchemy.ext.declarative import declarative_base 
 from sqlalchemy.orm import sessionmaker 
-from config import connection_string, secret_key, dan_id
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 from datetime import timedelta
+
+connection_string = os.environ["DATABASE_CONNECTION_STRING"]
+secret_key = os.environ["SECRET_KEY"]
+
+#TODO: generalize with logins
+dan_id = 1
 
 #%% set up
 
@@ -15,6 +21,7 @@ app.permanent_session_lifetime = timedelta(minutes = 5)
 
 
 #%% database set up
+print(connection_string)
 engine = create_engine(f"mssql+pyodbc:///?odbc_connect={connection_string}")
 Base = declarative_base()
 
