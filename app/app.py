@@ -5,6 +5,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker 
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 from datetime import timedelta
+import pytz
+
+timezone = pytz.timezone("Canada/Eastern")
 
 connection_string = os.environ["DATABASE_CONNECTION_STRING"]
 secret_key = os.environ["SECRET_KEY"]
@@ -80,7 +83,7 @@ def intake():
         flash("Intake Logged", "intake_success")
         return redirect(url_for("log"))
     else:       
-        return render_template("intake.html")
+        return render_template("intake.html", current_datetime=datetime.now().strftime('%Y-%m-%d %H:%M'))
 
 @app.route("/output", methods = ["POST", "GET"])
 def output():
@@ -93,7 +96,7 @@ def output():
         flash("Output Logged", "output_success")
         return redirect(url_for("log"))
     else:       
-        return render_template("output.html")
+        return render_template("output.html", current_datetime=datetime.now().strftime('%Y-%m-%d %H:%M'))
 
 @app.route("/log")
 def log():
@@ -137,4 +140,4 @@ def analytics():
 
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(host='0.0.0.0', port=5000)
