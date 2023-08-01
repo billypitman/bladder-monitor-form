@@ -25,7 +25,7 @@ app.permanent_session_lifetime = timedelta(minutes = 5)
 
 #%% database set up
 print(connection_string)
-engine = create_engine(f"mssql+pyodbc:///?odbc_connect={connection_string}")
+engine = create_engine(f"mssql+pyodbc:///?odbc_connect={connection_string}", pool_pre_ping = True)
 Base = declarative_base()
 
 class Intake(Base):   
