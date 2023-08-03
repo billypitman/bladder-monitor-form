@@ -1,42 +1,35 @@
 import os
 from datetime import datetime
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, desc
-from sqlalchemy.ext.declarative import declarative_base 
-from sqlalchemy.orm import sessionmaker 
-from flask import Flask, redirect, url_for, render_template, request, session, flash
+from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, redirect, url_for, render_template, request, flash
 from datetime import timedelta
 import pytz
 
+#TODO: generalize timezones
 timezone = pytz.timezone("Canada/Eastern")
 
-connection_string = os.environ["DATABASE_CONNECTION_STRING"]
+# app and database set up
+connection_string = f"mssql+pyodbc:///?odbc_connect={os.environ['DATABASE_CONNECTION_STRING']}"
 secret_key = os.environ["SECRET_KEY"]
+app = Flask(__name__)
+app.secret_key = secret_key
+app.config['SQLALCHEMY_DATABASE_URI'] = connection_string
+app.permanent_session_lifetime = timedelta(minutes = 5)
+db = SQLAlchemy(app)
 
 #TODO: generalize with logins
 dan_id = 1
 
-#%% set up
 
-# application set up
-app = Flask(__name__)
-app.secret_key = secret_key
-app.permanent_session_lifetime = timedelta(minutes = 5)
-
-
-#%% database set up
-print(connection_string)
-engine = create_engine(f"mssql+pyodbc:///?odbc_connect={connection_string}", pool_pre_ping = True)
-Base = declarative_base()
-
-class Intake(Base):   
+class Intake(db.Model):   
     __tablename__ = 'intake'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, nullable = False)
-    intake_ml = Column(Integer, nullable = False)
-    measurement_time = Column(DateTime, nullable = False)
-    created_time = Column(DateTime, nullable = False)
-    active = Column(Boolean, nullable = False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, nullable = False)
+    intake_ml = db.Column(db.Integer, nullable = False)
+    measurement_time = db.Column(db.DateTime, nullable = False)
+    created_time = db.Column(db.DateTime, nullable = False)
+    active = db.Column(db.Boolean, nullable = False)
 
     def __init__(self, user_id, intake_ml, measurement_time):
         self.user_id = user_id 
@@ -45,15 +38,15 @@ class Intake(Base):
         self.created_time = datetime.now()
         self.active = True
 
-class Output(Base):   
+class Output(db.Model):   
     __tablename__ = 'output'
     
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, nullable = False)
-    output_ml = Column(Integer, nullable = False)
-    measurement_time = Column(DateTime, nullable = False)
-    created_time = Column(DateTime, nullable = False)
-    active = Column(Boolean, nullable = False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, nullable = False)
+    output_ml = db.Column(db.Integer, nullable = False)
+    measurement_time = db.Column(db.DateTime, nullable = False)
+    created_time = db.Column(db.DateTime, nullable = False)
+    active = db.Column(db.Boolean, nullable = False)
 
     def __init__(self, user_id, output_ml, measurement_time):
         self.user_id = user_id 
@@ -61,10 +54,6 @@ class Output(Base):
         self.measurement_time = datetime.strptime(measurement_time, "%Y-%m-%dT%H:%M").strftime("%Y-%m-%d %H:%M:%S")
         self.created_time = datetime.now()
         self.active = True
-
-Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
-session = Session()
 
 #%% set up pages
 
@@ -78,8 +67,8 @@ def intake():
         intake_ml = request.form["intake"]
         intake_timestamp = request.form["timestamp"]
         new_intake = Intake(user_id = dan_id, intake_ml = intake_ml, measurement_time = intake_timestamp)
-        session.add(new_intake)
-        session.commit()
+        db.session.add(new_intake)
+        db.session.commit()
         flash("Intake Logged", "intake_success")
         return redirect(url_for("log"))
     else:       
@@ -91,8 +80,8 @@ def output():
         output_ml = request.form["output"]
         output_timestamp = request.form["timestamp"]
         new_output = Output(user_id = dan_id, output_ml = output_ml, measurement_time = output_timestamp)
-        session.add(new_output)
-        session.commit()   
+        db.session.add(new_output)
+        db.session.commit()   
         flash("Output Logged", "output_success")
         return redirect(url_for("log"))
     else:       
@@ -101,19 +90,19 @@ def output():
 @app.route("/log")
 def log():
     # Retrieve the most recent 10 records from the database tables
-    intake_data = session.query(Intake).filter(Intake.active == True).order_by(Intake.created_time.desc()).limit(10)
-    output_data = session.query(Output).filter(Output.active == True).order_by(Output.created_time.desc()).limit(10)
+    intake_data = db.session.query(Intake).filter(Intake.active == True).order_by(Intake.created_time.desc()).limit(10)
+    output_data = db.session.query(Output).filter(Output.active == True).order_by(Output.created_time.desc()).limit(10)
 
     return render_template("log.html", intake_data=intake_data, output_data=output_data)    
 
 @app.route("/delete_intake/<int:intake_id>", methods = ["POST"])
 def delete_intake(intake_id):
-    intake = session.query(Intake).filter_by(id=intake_id).first()
+    intake = db.session.query(Intake).filter_by(id=intake_id).first()
     # Check if the intake record exists
     if intake:
         # Update the active field to False
         intake.active = False
-        session.commit()
+        db.session.commit()
         flash("Intake deleted successfully", "delete_success")
     else:
         flash("Intake record not found", "delete_error")
@@ -122,12 +111,12 @@ def delete_intake(intake_id):
 
 @app.route("/delete_output/<int:output_id>", methods = ["POST"])
 def delete_output(output_id):
-    output = session.query(Output).filter_by(id=output_id).first()
+    output = db.session.query(Output).filter_by(id=output_id).first()
     # Check if the intake record exists
     if output:
         # Update the active field to False
         output.active = False
-        session.commit()
+        db.session.commit()
         flash("Output deleted successfully", "delete_success")
     else:
         flash("Output record not found", "delete_error")
