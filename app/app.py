@@ -47,13 +47,15 @@ class Output(db.Model):
     measurement_time = db.Column(db.DateTime, nullable = False)
     created_time = db.Column(db.DateTime, nullable = False)
     active = db.Column(db.Boolean, nullable = False)
+    urgency = db.Column(db.VARCHAR(50), nullable = False)
 
-    def __init__(self, user_id, output_ml, measurement_time):
+    def __init__(self, user_id, output_ml, measurement_time, urgency):
         self.user_id = user_id 
         self.output_ml = output_ml 
         self.measurement_time = datetime.strptime(measurement_time, "%Y-%m-%dT%H:%M").strftime("%Y-%m-%d %H:%M:%S")
         self.created_time = datetime.now()
         self.active = True
+        self.urgency = urgency 
 
 #%% set up pages
 
@@ -79,7 +81,8 @@ def output():
     if request.method == "POST":
         output_ml = request.form["output"]
         output_timestamp = request.form["timestamp"]
-        new_output = Output(user_id = dan_id, output_ml = output_ml, measurement_time = output_timestamp)
+        output_urgency = request.form["urgency"]
+        new_output = Output(user_id = dan_id, output_ml = output_ml, measurement_time = output_timestamp, urgency = output_urgency)
         db.session.add(new_output)
         db.session.commit()   
         flash("Output Logged", "output_success")
