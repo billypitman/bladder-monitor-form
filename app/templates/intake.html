@@ -3,11 +3,30 @@
 {% block content %}
 <h3>Intake Logger</h3>
 <form action="#" method = "post">
+
     <label for="intake">Intake (mL): </label>
-    <p><input type="number" name = "intake" min="0" onkeydown="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"></p>
+    <p><input type="number" name = "intake" min="0" onkeydown="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"></p>       
+
+    <label for="intake_type">Type of Drink:</label>
+    <p>
+        <select name="intake_type" id="intake_type">
+            <option value="water" selected>Water</option>
+            <option value="alcohol">Alcoholic</option>
+            <option value="caffeine">Caffeinated</option>
+            <option value="sugary_drinks">Other Sugary Drinks</option>
+            <option value="non_caffeinated_tea">Non-Caffeinated Tea</option>
+            <option value="cranberry_juice">Cranberry Juice</option>
+            <option value="smoothie">Smoothie</option>
+            <option value="kombucha_june">Kombucha/Jun</option>
+            <option value="other">Other</option>
+        </select>
+    </p>
+
     <label for="timestamp">Timestamp:</label>
     <p><input type="datetime-local" id="timestamp" name="timestamp" value="{{current_datetime}}"></p>
-    <p><input type = "submit" value = "Submit" /></p>       
+
+    <p><input type = "submit" value = "Submit" /></p>      
+    
 </form>
 
 {% endblock %}
