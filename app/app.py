@@ -30,13 +30,15 @@ class Intake(db.Model):
     measurement_time = db.Column(db.DateTime, nullable = False)
     created_time = db.Column(db.DateTime, nullable = False)
     active = db.Column(db.Boolean, nullable = False)
+    type = db.Column(db.VARCHAR(50), nullable = False)
 
-    def __init__(self, user_id, intake_ml, measurement_time):
+    def __init__(self, user_id, intake_ml, measurement_time, type):
         self.user_id = user_id 
         self.intake_ml = intake_ml 
         self.measurement_time = datetime.strptime(measurement_time, "%Y-%m-%dT%H:%M").strftime("%Y-%m-%d %H:%M:%S")
         self.created_time = datetime.now()
         self.active = True
+        self.type = type
 
 class Output(db.Model):   
     __tablename__ = 'output'
@@ -68,7 +70,8 @@ def intake():
     if request.method == "POST":
         intake_ml = request.form["intake"]
         intake_timestamp = request.form["timestamp"]
-        new_intake = Intake(user_id = dan_id, intake_ml = intake_ml, measurement_time = intake_timestamp)
+        intake_type = request.form["type"]
+        new_intake = Intake(user_id = dan_id, intake_ml = intake_ml, measurement_time = intake_timestamp, type = intake_type)
         db.session.add(new_intake)
         db.session.commit()
         flash("Intake Logged", "intake_success")
