@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, redirect, url_for, render_template, request, flash
+from flask import Flask, redirect, url_for, render_template, request, flash, g
 from datetime import timedelta
 import pytz
 
@@ -68,6 +68,9 @@ class Output(db.Model):
 
 # ### set up pages
 
+@app.before_request
+def before_request():
+    g.version = os.environ["APP_VERSION"]
 
 @app.route("/")
 def home():

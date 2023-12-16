@@ -1,6 +1,10 @@
 #!/bin/bash
-sh ./scripts/build_and_run.sh
+echo "Building docker container"
+docker-compose build  
 
-docker login danhub.azurecr.io  
-docker tag danhub-web danhub.azurecr.io/danhub_app:v1.2  
-docker push danhub.azurecr.io/danhub_app:v1.2 
+source .env
+
+echo "Pushing to azure container registry"
+docker login $CONTAINER_REGISTRY_LOGIN_SERVER  
+docker tag $DOCKER_IMAGE_NAME $CONTAINER_REGISTRY_LOGIN_SERVER/$CONTAINER_REGISTRY_REPOSITORY:v$APP_VERSION 
+docker push $CONTAINER_REGISTRY_LOGIN_SERVER/$CONTAINER_REGISTRY_REPOSITORY:v$APP_VERSION
