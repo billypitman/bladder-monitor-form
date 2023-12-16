@@ -1,6 +1,6 @@
 # Bladder Health Monitor
 
-This repository contains a web form designed for monitoring bladder health in individuals with Spinal Cord Injury (SCI). It allows users to record their liquid intake and output. The form is built using Flask and packaged into a Docker image for easy deployment.
+This repository contains a web form designed for monitoring bladder health in individuals with Spinal Cord Injury (SCI). It allows users to record their liquid intake and output. The form is built using Flask and packaged into a Docker image for easy deployment. After logging, the structured tabular data can then be connected to downstream analytics for visualization and analysis.
 
 ## Setup Instructions
 
