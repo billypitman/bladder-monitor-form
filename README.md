@@ -1,19 +1,21 @@
-# danhub
+# bladder-health-monitor
+This repository holds a web form to input liquid intake
+and output as a means of monitoring bladder health in individuals
+with SCI. This web form is built with Flask and deployed into a docker image. 
 
+## Set up
 
-## Commands for setting up docker images
+To set up this repository, a connection with an Azure SQL database needs to be prepared.
+This can be performed by configuring a .env file with the database connection information. See the .env.example file for a template. 
 
-### Local
+## Deployment
 
-docker-compose build  
-docker-compose up  
+### Local deployment
+To deploy the docker image locally, run the build_and_run.sh bash script.
 
-### Deploying to Azure Container Registry
-First create an image using the commands in Local, then use the following commands:  
+### Deployment to azure
+To deploy the docker image to azure container registry. Run the deploy_to_azure.sh bash script.
 
-docker login danhub.azurecr.io  
-docker tag danhub-web danhub.azurecr.io/danhub_app:vX.Y  
-docker push danhub.azurecr.io/danhub_app:vX.Y  
 
 
 
