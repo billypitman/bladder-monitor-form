@@ -1,20 +1,20 @@
-# bladder-health-monitor
-This repository holds a web form to input liquid intake
-and output as a means of monitoring bladder health in individuals
-with SCI. This web form is built with Flask and deployed into a docker image. 
+# Bladder Health Monitor
 
-## Set up
+This repository contains a web form designed for monitoring bladder health in individuals with Spinal Cord Injury (SCI). It allows users to record their liquid intake and output. The form is built using Flask and packaged into a Docker image for easy deployment.
 
-To set up this repository, a connection with an Azure SQL database needs to be prepared.
-This can be performed by configuring a .env file with the database connection information. See the .env.example file for a template. 
+## Setup Instructions
 
-## Deployment
+### Database Connection
+- **Azure SQL Database**: Before using the application, a valid Azure SQL database will need to be created, with its access credentials available.
+- **Configuration**: Create a `.env` file in the project root directory with your database connection details, and azure container registry connection details if deploying to the azure container registry. Refer to the `.env.example` file for the format.
 
-### Local deployment
-To deploy the docker image locally, run the build_and_run.sh bash script.
+## Deployment Guide
 
-### Deployment to azure
-To deploy the docker image to azure container registry. Run the deploy_to_azure.sh bash script.
+### Local Deployment
+- **Docker Image**: Run the `scripts/build_and_run.sh` bash script from the project root to build and run the Docker image locally.
+
+### Deployment to Azure
+- **Azure Container Registry**: To deploy the Docker image to Azure, execute the `scripts/deploy_to_azure.sh` bash script from the project root. 
 
 
 
