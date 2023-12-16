@@ -2,6 +2,8 @@
 echo "Building docker container"
 docker-compose build  
 
+APP_VERSION=$(python -c "from app.version import APP_VERSION; print(APP_VERSION)")
+
 source .env
 
 echo "Pushing to azure container registry"

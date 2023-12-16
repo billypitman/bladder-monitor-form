@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, redirect, url_for, render_template, request, flash, g
 from datetime import timedelta
 import pytz
+from version import APP_VERSION
 
 # TODO: generalize timezones to the web form user
 timezone = pytz.timezone(os.environ["TZ"])
@@ -70,7 +71,7 @@ class Output(db.Model):
 
 @app.before_request
 def before_request():
-    g.version = os.environ["APP_VERSION"]
+    g.version = APP_VERSION
 
 @app.route("/")
 def home():
