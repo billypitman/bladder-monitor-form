@@ -7,7 +7,7 @@ import pytz
 
 # TODO: generalize timezones to the web form user
 timezone = pytz.timezone(os.environ["TZ"])
-# TODO: generalize with uesr login
+# TODO: generalize with user login
 user_id = 1
 
 # app and database set up
@@ -165,11 +165,6 @@ def delete_output(output_id):
         flash("Output record not found", "delete_error")
 
     return redirect(url_for("log"))
-
-
-@app.route("/analytics")
-def analytics():
-    return render_template("analytics.html")
 
 
 if __name__ == "__main__":
