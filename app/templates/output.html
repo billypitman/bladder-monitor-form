@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Output Logger{% endblock %}
+{% block content %}
+<h3>Output Logger</h3>
+<form action="#" method = "post">
+    
+    <label for="output">Output (mL): </label>
+    <p><input type="number" name = "output" min="0" onkeydown="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"></p>
+
+    <label for="urgency">Urgency:</label>
+    <p>
+        <input type="radio" id="non_urgent" name="urgency" value="Non Urgent">
+        <label for="non_urgent">Non Urgent</label>
+    
+        <input type="radio" id="urgent" name="urgency" value="Urgent" checked>
+        <label for="urgent">Urgent</label>
+    
+        <input type="radio" id="very_urgent" name="urgency" value="Very Urgent">
+        <label for="very_urgent">Very Urgent</label>
+    </p>
+
+    <label for="timestamp">Timestamp:</label>
+    <p><input type="datetime-local" id="timestamp" name="timestamp" value="{{current_datetime}}"></p>
+
+    <p><input type = "submit" value = "Submit" /></p>       
+    
+</form>
+
+{% endblock %}
